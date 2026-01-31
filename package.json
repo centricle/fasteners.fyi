@@ -1,0 +1,17 @@
+{
+  "name": "fasteners.fyi",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev --port 7010",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/netlify": "^6.5.9",
+    "@tailwindcss/vite": "^4.1.18",
+    "astro": "^5.13.7",
+    "tailwindcss": "^4.1.18"
+  }
+}

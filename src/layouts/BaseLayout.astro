@@ -1,0 +1,49 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Comprehensive fastener specifications database - screws, bolts, anchors, and nuts." } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title} | fasteners.fyi</title>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <header class="border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-sm sticky top-0 z-50">
+      <nav class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+        <a href="/" class="text-xl font-bold text-primary-400 hover:text-primary-300 transition-colors">
+          fasteners.fyi
+        </a>
+        <div class="flex gap-6 text-sm">
+          <a href="/screws" class="text-zinc-400 hover:text-zinc-100 transition-colors">Screws</a>
+          <a href="/bolts" class="text-zinc-400 hover:text-zinc-100 transition-colors">Bolts</a>
+          <a href="/anchors" class="text-zinc-400 hover:text-zinc-100 transition-colors">Anchors</a>
+          <a href="/nuts" class="text-zinc-400 hover:text-zinc-100 transition-colors">Nuts</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <footer class="border-t border-zinc-800 mt-auto">
+      <div class="max-w-6xl mx-auto px-4 py-8 text-center text-zinc-500 text-sm">
+        <p>&copy; {new Date().getFullYear()} fasteners.fyi - Part of <a href="https://thelookup.fyi" class="text-primary-400 hover:text-primary-300">The Lookup</a> family</p>
+        <p class="mt-2">Open source fastener specifications database. MIT License.</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  @import "../styles/global.css";
+</style>
