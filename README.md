@@ -36,14 +36,6 @@ npm run preview      # Preview production build
 └── nuts/            # Hex nuts, lock nuts, wing nuts
 ```
 
-## Part of The Lookup Family
-
-fasteners.fyi is part of [The Lookup](https://thelookup.fyi) family of objective reference databases:
-
-- [batteries.fyi](https://batteries.fyi) - Battery specifications
-- [cables.fyi](https://cables.fyi) - Cable and connector reference
-- fasteners.fyi - Fastener specifications (this project)
-
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
