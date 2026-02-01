@@ -1,30 +1,37 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { screws, bolts, anchors, nuts, washers } from '../utils/data';
 
 const categories = [
   {
     name: 'Screws',
     href: '/screws',
     description: 'Wood screws, machine screws, self-tapping, and specialty screws',
-    count: 0
+    count: screws.length
   },
   {
     name: 'Bolts',
     href: '/bolts',
     description: 'Hex bolts, carriage bolts, eye bolts, and structural fasteners',
-    count: 0
+    count: bolts.length
   },
   {
     name: 'Anchors',
     href: '/anchors',
     description: 'Wall anchors, concrete anchors, toggle bolts, and expansion anchors',
-    count: 0
+    count: anchors.length
   },
   {
     name: 'Nuts',
     href: '/nuts',
     description: 'Hex nuts, lock nuts, wing nuts, and specialty nuts',
-    count: 0
+    count: nuts.length
+  },
+  {
+    name: 'Washers',
+    href: '/washers',
+    description: 'Flat washers, lock washers, spring washers, and specialty washers',
+    count: washers.length
   }
 ];
 ---

@@ -39,6 +39,48 @@ function formatHeadStyle(head: string | undefined): string {
 ---
 
 <BaseLayout title={title} description={description}>
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": bolt.name,
+    "description": bolt.description,
+    "category": "Fastener > Bolt",
+    "material": bolt.materials.map(m => m.replace(/-/g, ' ')).join(', '),
+    "additionalProperty": [
+      ...(bolt.headStyle && bolt.headStyle !== 'none' ? [{
+        "@type": "PropertyValue",
+        "name": "Head Style",
+        "value": bolt.headStyle
+      }] : []),
+      ...(bolt.driveType && bolt.driveType !== 'none' ? [{
+        "@type": "PropertyValue",
+        "name": "Drive Type",
+        "value": bolt.driveType
+      }] : []),
+      ...(bolt.threadType ? [{
+        "@type": "PropertyValue",
+        "name": "Thread Type",
+        "value": bolt.threadType
+      }] : []),
+      ...(bolt.diameterRange ? [{
+        "@type": "PropertyValue",
+        "name": "Diameter Range",
+        "value": `${bolt.diameterRange.min}" - ${bolt.diameterRange.max}"`
+      }] : []),
+      ...(bolt.lengthRange ? [{
+        "@type": "PropertyValue",
+        "name": "Length Range",
+        "value": `${bolt.lengthRange.min}" - ${bolt.lengthRange.max}"`
+      }] : []),
+      {
+        "@type": "PropertyValue",
+        "name": "Nut Required",
+        "value": bolt.nutRequired ? "Yes" : "No"
+      }
+    ]
+  })} />
+
   <div class="max-w-6xl mx-auto px-4 py-8">
     <!-- Breadcrumb -->
     <nav class="mb-8 flex text-sm" aria-label="Breadcrumb">

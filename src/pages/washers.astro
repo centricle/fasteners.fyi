@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { washers } from '../utils/data';
+---
+
+<BaseLayout title="Washers" description="Comprehensive washer specifications - flat washers, lock washers, spring washers, and specialty washers.">
+  <div class="max-w-6xl mx-auto px-4 py-16">
+    <h1 class="text-4xl font-bold mb-4">Washers</h1>
+    <p class="text-xl text-zinc-400 mb-8">
+      Flat washers, lock washers, spring washers, and specialty washers for load distribution and vibration resistance.
+    </p>
+
+    <div class="grid gap-4">
+      {washers.map((washer) => (
+        <a href={`/washers/${washer.slug}`} class="block rounded-lg border border-zinc-800 bg-zinc-900/50 p-6 hover:border-blue-500/50 hover:bg-zinc-900 transition-colors">
+          <h2 class="text-xl font-semibold mb-2">{washer.name}</h2>
+          <p class="text-zinc-400 mb-4">{washer.description}</p>
+          <div class="flex flex-wrap gap-2">
+            {washer.materials.slice(0, 3).map((material) => (
+              <span class="px-2 py-1 text-xs rounded bg-zinc-800 text-zinc-300">{material}</span>
+            ))}
+            {washer.washerType && (
+              <span class="px-2 py-1 text-xs rounded bg-blue-900/50 text-blue-300">{washer.washerType} type</span>
+            )}
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

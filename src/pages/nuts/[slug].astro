@@ -45,6 +45,43 @@ function formatLockingMechanism(lock: string | undefined): string {
 ---
 
 <BaseLayout title={title} description={description}>
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": nut.name,
+    "description": nut.description,
+    "category": "Fastener > Nut",
+    "material": nut.materials.map(m => m.replace(/-/g, ' ')).join(', '),
+    "additionalProperty": [
+      ...(nut.headStyle && nut.headStyle !== 'none' ? [{
+        "@type": "PropertyValue",
+        "name": "Shape",
+        "value": nut.headStyle
+      }] : []),
+      ...(nut.driveType && nut.driveType !== 'none' ? [{
+        "@type": "PropertyValue",
+        "name": "Drive Type",
+        "value": nut.driveType
+      }] : []),
+      ...(nut.threadType ? [{
+        "@type": "PropertyValue",
+        "name": "Thread Type",
+        "value": nut.threadType
+      }] : []),
+      ...(nut.lockingMechanism && nut.lockingMechanism !== 'none' ? [{
+        "@type": "PropertyValue",
+        "name": "Locking Mechanism",
+        "value": nut.lockingMechanism.replace(/-/g, ' ')
+      }] : []),
+      ...(nut.diameterRange ? [{
+        "@type": "PropertyValue",
+        "name": "Thread Size Range",
+        "value": `${nut.diameterRange.min}" - ${nut.diameterRange.max}"`
+      }] : [])
+    ]
+  })} />
+
   <div class="max-w-6xl mx-auto px-4 py-8">
     <!-- Breadcrumb -->
     <nav class="mb-8 flex text-sm" aria-label="Breadcrumb">

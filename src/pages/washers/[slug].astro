@@ -1,23 +1,23 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { screws } from '../../utils/data';
-import type { Screw } from '../../types/fastener';
+import { washers } from '../../utils/data';
+import type { Washer } from '../../types/fastener';
 
 export function getStaticPaths() {
-  return screws.map((screw) => ({
-    params: { slug: screw.slug },
-    props: { screw }
+  return washers.map((washer) => ({
+    params: { slug: washer.slug },
+    props: { washer }
   }));
 }
 
 interface Props {
-  screw: Screw;
+  washer: Washer;
 }
 
-const { screw } = Astro.props;
+const { washer } = Astro.props;
 
-const title = `${screw.name} Specifications`;
-const description = screw.description;
+const title = `${washer.name} Specifications`;
+const description = washer.description;
 
 // Format dimension range for display
 function formatRange(range: { min: number; max: number; unit: string } | undefined): string {
@@ -25,16 +25,10 @@ function formatRange(range: { min: number; max: number; unit: string } | undefin
   return `${range.min}" - ${range.max}"`;
 }
 
-// Format drive type for display
-function formatDriveType(drive: string | undefined): string {
-  if (!drive) return 'N/A';
-  return drive.charAt(0).toUpperCase() + drive.slice(1).replace(/-/g, ' ');
-}
-
-// Format head style for display
-function formatHeadStyle(head: string | undefined): string {
-  if (!head) return 'N/A';
-  return head.charAt(0).toUpperCase() + head.slice(1).replace(/-/g, ' ');
+// Format washer type for display
+function formatWasherType(type: string | undefined): string {
+  if (!type) return 'N/A';
+  return type.charAt(0).toUpperCase() + type.slice(1).replace(/-/g, ' ');
 }
 ---
 
@@ -43,35 +37,30 @@ function formatHeadStyle(head: string | undefined): string {
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "Product",
-    "name": screw.name,
-    "description": screw.description,
-    "category": "Fastener > Screw",
-    "material": screw.materials.map(m => m.replace(/-/g, ' ')).join(', '),
+    "name": washer.name,
+    "description": washer.description,
+    "category": "Fastener > Washer",
+    "material": washer.materials.map(m => m.replace(/-/g, ' ')).join(', '),
     "additionalProperty": [
-      ...(screw.headStyle ? [{
+      {
         "@type": "PropertyValue",
-        "name": "Head Style",
-        "value": screw.headStyle
+        "name": "Washer Type",
+        "value": washer.washerType
+      },
+      ...(washer.innerDiameterRange ? [{
+        "@type": "PropertyValue",
+        "name": "Inner Diameter Range",
+        "value": `${washer.innerDiameterRange.min}" - ${washer.innerDiameterRange.max}"`
       }] : []),
-      ...(screw.driveType ? [{
+      ...(washer.outerDiameterRange ? [{
         "@type": "PropertyValue",
-        "name": "Drive Type",
-        "value": screw.driveType
+        "name": "Outer Diameter Range",
+        "value": `${washer.outerDiameterRange.min}" - ${washer.outerDiameterRange.max}"`
       }] : []),
-      ...(screw.threadType ? [{
+      ...(washer.thicknessRange ? [{
         "@type": "PropertyValue",
-        "name": "Thread Type",
-        "value": screw.threadType
-      }] : []),
-      ...(screw.diameterRange ? [{
-        "@type": "PropertyValue",
-        "name": "Diameter Range",
-        "value": `${screw.diameterRange.min}" - ${screw.diameterRange.max}"`
-      }] : []),
-      ...(screw.lengthRange ? [{
-        "@type": "PropertyValue",
-        "name": "Length Range",
-        "value": `${screw.lengthRange.min}" - ${screw.lengthRange.max}"`
+        "name": "Thickness Range",
+        "value": `${washer.thicknessRange.min}" - ${washer.thicknessRange.max}"`
       }] : [])
     ]
   })} />
@@ -85,10 +74,10 @@ function formatHeadStyle(head: string | undefined): string {
         </li>
         <li class="text-zinc-600">/</li>
         <li>
-          <a href="/screws" class="text-zinc-400 hover:text-zinc-100">Screws</a>
+          <a href="/washers" class="text-zinc-400 hover:text-zinc-100">Washers</a>
         </li>
         <li class="text-zinc-600">/</li>
-        <li class="text-zinc-300">{screw.name}</li>
+        <li class="text-zinc-300">{washer.name}</li>
       </ol>
     </nav>
 
@@ -96,58 +85,54 @@ function formatHeadStyle(head: string | undefined): string {
       <!-- Main Content -->
       <div class="lg:col-span-2 space-y-8">
         <div>
-          <h1 class="text-4xl font-bold mb-4">{screw.name}</h1>
-          {screw.aliases && screw.aliases.length > 0 && (
-            <p class="text-zinc-400 mb-4">Also known as: {screw.aliases.join(', ')}</p>
+          <h1 class="text-4xl font-bold mb-4">{washer.name}</h1>
+          {washer.aliases && washer.aliases.length > 0 && (
+            <p class="text-zinc-400 mb-4">Also known as: {washer.aliases.join(', ')}</p>
           )}
-          <p class="text-lg text-zinc-300">{screw.description}</p>
+          <p class="text-lg text-zinc-300">{washer.description}</p>
         </div>
 
         <!-- Quick Specs -->
         <div class="border border-zinc-800 rounded-lg p-6 bg-zinc-900/50">
           <h2 class="text-xl font-semibold mb-4">Quick Specifications</h2>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div class="text-center">
-              <p class="text-sm text-zinc-500 mb-1">Head Style</p>
-              <p class="text-lg font-semibold">{formatHeadStyle(screw.headStyle)}</p>
+              <p class="text-sm text-zinc-500 mb-1">Washer Type</p>
+              <p class="text-lg font-semibold">{formatWasherType(washer.washerType)}</p>
             </div>
             <div class="text-center">
-              <p class="text-sm text-zinc-500 mb-1">Drive Type</p>
-              <p class="text-lg font-semibold">{formatDriveType(screw.driveType)}</p>
+              <p class="text-sm text-zinc-500 mb-1">Category</p>
+              <p class="text-lg font-semibold">Washer</p>
             </div>
             <div class="text-center">
-              <p class="text-sm text-zinc-500 mb-1">Thread Type</p>
-              <p class="text-lg font-semibold">{formatDriveType(screw.threadType)}</p>
+              <p class="text-sm text-zinc-500 mb-1">Measurement</p>
+              <p class="text-lg font-semibold">{washer.measurementSystem.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ')}</p>
             </div>
-            {screw.pointType && (
-              <div class="text-center">
-                <p class="text-sm text-zinc-500 mb-1">Point Type</p>
-                <p class="text-lg font-semibold">{formatDriveType(screw.pointType)}</p>
-              </div>
-            )}
           </div>
         </div>
 
         <!-- Dimensions -->
         <div class="border border-zinc-800 rounded-lg p-6 bg-zinc-900/50">
           <h2 class="text-xl font-semibold mb-4">Dimensions</h2>
-          <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {screw.diameterRange && (
+          <dl class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {washer.innerDiameterRange && (
               <div>
-                <dt class="text-sm text-zinc-500">Diameter Range</dt>
-                <dd class="text-lg">{formatRange(screw.diameterRange)}</dd>
+                <dt class="text-sm text-zinc-500">Inner Diameter (ID)</dt>
+                <dd class="text-lg">{formatRange(washer.innerDiameterRange)}</dd>
               </div>
             )}
-            {screw.lengthRange && (
+            {washer.outerDiameterRange && (
               <div>
-                <dt class="text-sm text-zinc-500">Length Range</dt>
-                <dd class="text-lg">{formatRange(screw.lengthRange)}</dd>
+                <dt class="text-sm text-zinc-500">Outer Diameter (OD)</dt>
+                <dd class="text-lg">{formatRange(washer.outerDiameterRange)}</dd>
               </div>
             )}
-            <div>
-              <dt class="text-sm text-zinc-500">Measurement System</dt>
-              <dd class="text-lg">{screw.measurementSystem.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ')}</dd>
-            </div>
+            {washer.thicknessRange && (
+              <div>
+                <dt class="text-sm text-zinc-500">Thickness</dt>
+                <dd class="text-lg">{formatRange(washer.thicknessRange)}</dd>
+              </div>
+            )}
           </dl>
         </div>
 
@@ -155,7 +140,7 @@ function formatHeadStyle(head: string | undefined): string {
         <div class="border border-zinc-800 rounded-lg p-6 bg-zinc-900/50">
           <h2 class="text-xl font-semibold mb-4">Available Materials</h2>
           <div class="flex flex-wrap gap-2">
-            {screw.materials.map((material) => (
+            {washer.materials.map((material) => (
               <span class="px-3 py-1 rounded-full bg-zinc-800 text-zinc-300 text-sm">
                 {material.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
               </span>
@@ -164,11 +149,11 @@ function formatHeadStyle(head: string | undefined): string {
         </div>
 
         <!-- Standards -->
-        {screw.standards && screw.standards.length > 0 && (
+        {washer.standards && washer.standards.length > 0 && (
           <div class="border border-zinc-800 rounded-lg p-6 bg-zinc-900/50">
             <h2 class="text-xl font-semibold mb-4">Standards</h2>
             <div class="flex flex-wrap gap-2">
-              {screw.standards.map((standard) => (
+              {washer.standards.map((standard) => (
                 <span class="px-3 py-1 rounded border border-zinc-700 text-zinc-300 text-sm font-mono">
                   {standard}
                 </span>
@@ -184,7 +169,7 @@ function formatHeadStyle(head: string | undefined): string {
         <div class="border border-zinc-800 rounded-lg p-6 bg-blue-950/30">
           <h3 class="text-lg font-semibold mb-4">Common Applications</h3>
           <ul class="space-y-2 text-zinc-300">
-            {screw.applications.map((app) => (
+            {washer.applications.map((app) => (
               <li class="flex items-start gap-2">
                 <span class="text-green-500 mt-1">+</span>
                 <span>{app}</span>
@@ -194,11 +179,11 @@ function formatHeadStyle(head: string | undefined): string {
         </div>
 
         <!-- Not Recommended -->
-        {screw.notRecommendedFor && screw.notRecommendedFor.length > 0 && (
+        {washer.notRecommendedFor && washer.notRecommendedFor.length > 0 && (
           <div class="border border-zinc-800 rounded-lg p-6 bg-red-950/20">
             <h3 class="text-lg font-semibold mb-4">Not Recommended For</h3>
             <ul class="space-y-2 text-zinc-300">
-              {screw.notRecommendedFor.map((item) => (
+              {washer.notRecommendedFor.map((item) => (
                 <li class="flex items-start gap-2">
                   <span class="text-red-500 mt-1">-</span>
                   <span>{item}</span>
@@ -209,12 +194,12 @@ function formatHeadStyle(head: string | undefined): string {
         )}
 
         <!-- Related Fasteners -->
-        {screw.relatedFasteners && screw.relatedFasteners.length > 0 && (
+        {washer.relatedFasteners && washer.relatedFasteners.length > 0 && (
           <div class="border border-zinc-800 rounded-lg p-6 bg-zinc-900/50">
             <h3 class="text-lg font-semibold mb-4">Related Fasteners</h3>
             <div class="flex flex-wrap gap-2">
-              {screw.relatedFasteners.map((slug) => (
-                <a href={`/screws/${slug}`} class="px-3 py-1 rounded bg-zinc-800 text-primary-400 hover:bg-zinc-700 text-sm transition-colors">
+              {washer.relatedFasteners.map((slug) => (
+                <a href={`/washers/${slug}`} class="px-3 py-1 rounded bg-zinc-800 text-primary-400 hover:bg-zinc-700 text-sm transition-colors">
                   {slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                 </a>
               ))}

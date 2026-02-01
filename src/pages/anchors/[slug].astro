@@ -32,6 +32,43 @@ function formatBaseMaterial(material: string): string {
 ---
 
 <BaseLayout title={title} description={description}>
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": anchor.name,
+    "description": anchor.description,
+    "category": "Fastener > Anchor",
+    "material": anchor.materials.map(m => m.replace(/-/g, ' ')).join(', '),
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "Base Materials",
+        "value": anchor.baseMaterial.map(m => m.replace(/-/g, ' ')).join(', ')
+      },
+      ...(anchor.loadCapacity?.tension ? [{
+        "@type": "PropertyValue",
+        "name": "Tension Capacity",
+        "value": `${anchor.loadCapacity.tension} ${anchor.loadCapacity.unit}`
+      }] : []),
+      ...(anchor.loadCapacity?.shear ? [{
+        "@type": "PropertyValue",
+        "name": "Shear Capacity",
+        "value": `${anchor.loadCapacity.shear} ${anchor.loadCapacity.unit}`
+      }] : []),
+      ...(anchor.diameterRange ? [{
+        "@type": "PropertyValue",
+        "name": "Diameter Range",
+        "value": `${anchor.diameterRange.min}" - ${anchor.diameterRange.max}"`
+      }] : []),
+      ...(anchor.lengthRange ? [{
+        "@type": "PropertyValue",
+        "name": "Length Range",
+        "value": `${anchor.lengthRange.min}" - ${anchor.lengthRange.max}"`
+      }] : [])
+    ]
+  })} />
+
   <div class="max-w-6xl mx-auto px-4 py-8">
     <!-- Breadcrumb -->
     <nav class="mb-8 flex text-sm" aria-label="Breadcrumb">

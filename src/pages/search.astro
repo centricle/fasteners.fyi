@@ -1,0 +1,298 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getAllFasteners, searchFasteners } from '../utils/data';
+
+// Get data for server-side calculations
+const allFasteners = getAllFasteners();
+const totalCount = allFasteners.length;
+
+// Popular searches with result counts
+const popularSearches = [
+  'wood', 'hex', 'lock', 'stainless', 'concrete', 'drywall'
+].map(term => ({
+  term,
+  count: searchFasteners(term).length
+}));
+
+// Prepare client-side data for search
+const clientFasteners = allFasteners.map(f => ({
+  name: f.name,
+  slug: f.slug,
+  category: f.category,
+  description: f.description,
+  materials: f.materials,
+  applications: f.applications,
+  aliases: f.aliases || [],
+  standards: f.standards || [],
+  headStyle: f.headStyle,
+  driveType: f.driveType
+}));
+
+const title = 'Search Fasteners | fasteners.fyi';
+const description = 'Search the comprehensive fastener database by type, material, or application.';
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="mb-12">
+      <nav class="flex mb-6 text-sm" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-2">
+          <li>
+            <a href="/" class="text-zinc-400 hover:text-zinc-100">Home</a>
+          </li>
+          <li class="text-zinc-600">/</li>
+          <li class="text-zinc-300">Search</li>
+        </ol>
+      </nav>
+
+      <div class="text-center">
+        <h1 class="text-4xl font-bold mb-4">Search Fasteners</h1>
+
+        <!-- Search Form -->
+        <div class="max-w-2xl mx-auto mb-8">
+          <form method="GET" action="/search" class="flex gap-4" role="search">
+            <input
+              type="search"
+              name="q"
+              id="search-input"
+              placeholder="Search by name, material, or application..."
+              aria-label="Search fastener database"
+              class="flex-1 px-4 py-3 text-zinc-100 bg-zinc-900 border border-zinc-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none"
+            />
+            <button
+              type="submit"
+              class="px-6 py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-500 focus:ring-2 focus:ring-primary-400 focus:outline-none transition-colors"
+            >
+              Search
+            </button>
+          </form>
+        </div>
+
+        <div id="search-status" class="inline-flex items-center px-4 py-2 bg-primary-900/50 text-primary-300 rounded-lg" style="display: none;">
+          <span class="font-medium" id="search-status-text"></span>
+        </div>
+
+        <div id="search-loading" class="inline-flex items-center px-4 py-2 bg-zinc-800 text-zinc-300 rounded-lg" style="display: none;">
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span class="font-medium">Searching...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Results Container -->
+    <div id="search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" style="display: none;">
+    </div>
+
+    <!-- No Results -->
+    <div id="no-results" class="text-center py-12" style="display: none;">
+      <div class="mx-auto w-24 h-24 bg-zinc-800 rounded-full flex items-center justify-center mb-6">
+        <svg class="w-12 h-12 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </div>
+      <h2 class="text-2xl font-semibold mb-2">No results found</h2>
+      <p class="text-zinc-400 mb-6">
+        No fasteners matching "<span class="font-medium text-zinc-300" id="no-results-query"></span>".
+      </p>
+      <div class="space-y-4">
+        <p class="text-sm text-zinc-500">Try searching for:</p>
+        <div class="flex flex-wrap justify-center gap-2">
+          {['wood screw', 'hex bolt', 'lock washer', 'stainless', 'concrete', 'toggle'].map(suggestion => (
+            <a
+              href={`/search?q=${encodeURIComponent(suggestion)}`}
+              class="px-3 py-1 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 rounded-lg transition-colors text-sm"
+            >
+              {suggestion}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Default Content (when no search) -->
+    <div id="default-content" class="text-center py-12">
+      <div class="mx-auto w-24 h-24 bg-primary-900/50 rounded-full flex items-center justify-center mb-6">
+        <svg class="w-12 h-12 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </div>
+      <h2 class="text-2xl font-semibold mb-4">Search the fastener database</h2>
+      <p class="text-zinc-400 mb-8 max-w-2xl mx-auto">
+        Find fasteners by name (wood screw, hex bolt), material (stainless, brass), or application (deck, drywall).
+        The database includes {totalCount} fastener types with complete specifications.
+      </p>
+
+      <div class="space-y-8">
+        <div>
+          <h3 class="text-lg font-semibold mb-3">Popular Searches</h3>
+          <div class="flex flex-wrap justify-center gap-3">
+            {popularSearches.map(item => (
+              <a
+                href={`/search?q=${item.term}`}
+                class="group border border-zinc-700 bg-zinc-900/50 px-4 py-3 rounded-lg transition-colors hover:bg-zinc-800 hover:border-primary-600"
+              >
+                <span class="font-medium text-zinc-100">{item.term}</span>
+                <span class="block text-sm text-zinc-500">{item.count} result{item.count !== 1 ? 's' : ''}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold mb-3">Browse by Category</h3>
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-3 max-w-3xl mx-auto">
+            <a href="/screws" class="group border border-zinc-700 bg-zinc-900/50 p-4 rounded-lg transition-colors hover:bg-zinc-800 hover:border-primary-600">
+              <h4 class="font-medium text-zinc-100">Screws</h4>
+              <p class="text-sm text-zinc-500">Wood, machine, specialty</p>
+            </a>
+            <a href="/bolts" class="group border border-zinc-700 bg-zinc-900/50 p-4 rounded-lg transition-colors hover:bg-zinc-800 hover:border-primary-600">
+              <h4 class="font-medium text-zinc-100">Bolts</h4>
+              <p class="text-sm text-zinc-500">Hex, carriage, structural</p>
+            </a>
+            <a href="/anchors" class="group border border-zinc-700 bg-zinc-900/50 p-4 rounded-lg transition-colors hover:bg-zinc-800 hover:border-primary-600">
+              <h4 class="font-medium text-zinc-100">Anchors</h4>
+              <p class="text-sm text-zinc-500">Wall, concrete, toggle</p>
+            </a>
+            <a href="/nuts" class="group border border-zinc-700 bg-zinc-900/50 p-4 rounded-lg transition-colors hover:bg-zinc-800 hover:border-primary-600">
+              <h4 class="font-medium text-zinc-100">Nuts</h4>
+              <p class="text-sm text-zinc-500">Hex, lock, wing</p>
+            </a>
+            <a href="/washers" class="group border border-zinc-700 bg-zinc-900/50 p-4 rounded-lg transition-colors hover:bg-zinc-800 hover:border-primary-600">
+              <h4 class="font-medium text-zinc-100">Washers</h4>
+              <p class="text-sm text-zinc-500">Flat, lock, spring</p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script define:vars={{ clientFasteners }}>
+    const fastenerData = clientFasteners;
+
+    function searchFasteners(query) {
+      if (!query) return [];
+
+      const searchTerm = query.toLowerCase();
+
+      return fastenerData.filter(fastener => {
+        return (
+          fastener.name.toLowerCase().includes(searchTerm) ||
+          fastener.description.toLowerCase().includes(searchTerm) ||
+          fastener.category.toLowerCase().includes(searchTerm) ||
+          fastener.applications.some(app => app.toLowerCase().includes(searchTerm)) ||
+          fastener.aliases.some(alias => alias.toLowerCase().includes(searchTerm)) ||
+          fastener.materials.some(mat => mat.toLowerCase().includes(searchTerm)) ||
+          fastener.standards.some(std => std.toLowerCase().includes(searchTerm)) ||
+          (fastener.headStyle && fastener.headStyle.toLowerCase().includes(searchTerm)) ||
+          (fastener.driveType && fastener.driveType.toLowerCase().includes(searchTerm))
+        );
+      });
+    }
+
+    function highlightSearchTerm(text, searchTerm) {
+      if (!searchTerm || !text) return text;
+      const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+      return text.replace(regex, '<mark class="bg-primary-900/50 text-primary-300 px-0.5 rounded">$1</mark>');
+    }
+
+    function formatCategory(category) {
+      return category.charAt(0).toUpperCase() + category.slice(1) + 's';
+    }
+
+    function createFastenerCard(fastener, searchTerm) {
+      const categoryPath = fastener.category + 's';
+      return `
+        <a href="/${categoryPath}/${fastener.slug}" class="block rounded-lg border border-zinc-800 bg-zinc-900/50 p-6 hover:border-primary-600 hover:bg-zinc-900 transition-colors">
+          <div class="flex justify-between items-start mb-3">
+            <h3 class="text-xl font-semibold text-zinc-100">${highlightSearchTerm(fastener.name, searchTerm)}</h3>
+            <span class="px-2 py-1 text-xs rounded bg-zinc-800 text-zinc-300 uppercase">${formatCategory(fastener.category)}</span>
+          </div>
+          <p class="text-zinc-400 text-sm mb-4 line-clamp-2">${highlightSearchTerm(fastener.description, searchTerm)}</p>
+          <div class="flex flex-wrap gap-2">
+            ${fastener.materials.slice(0, 3).map(mat =>
+              `<span class="px-2 py-1 text-xs rounded bg-zinc-800 text-zinc-300">${highlightSearchTerm(mat.replace(/-/g, ' '), searchTerm)}</span>`
+            ).join('')}
+            ${fastener.driveType ? `<span class="px-2 py-1 text-xs rounded bg-primary-900/50 text-primary-300">${fastener.driveType} drive</span>` : ''}
+          </div>
+        </a>
+      `;
+    }
+
+    function performSearch() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const query = urlParams.get('q') || '';
+      const searchInput = document.getElementById('search-input');
+
+      if (searchInput) {
+        searchInput.value = query;
+      }
+
+      const defaultContent = document.getElementById('default-content');
+      const searchStatus = document.getElementById('search-status');
+      const searchLoading = document.getElementById('search-loading');
+      const resultsEl = document.getElementById('search-results');
+      const noResultsEl = document.getElementById('no-results');
+
+      if (!query) {
+        defaultContent.style.display = 'block';
+        searchStatus.style.display = 'none';
+        searchLoading.style.display = 'none';
+        resultsEl.style.display = 'none';
+        noResultsEl.style.display = 'none';
+        return;
+      }
+
+      // Hide default, show loading
+      defaultContent.style.display = 'none';
+      searchLoading.style.display = 'flex';
+      searchStatus.style.display = 'none';
+      resultsEl.style.display = 'none';
+      noResultsEl.style.display = 'none';
+
+      // Brief delay for UX
+      setTimeout(() => {
+        const results = searchFasteners(query);
+        const statusTextEl = document.getElementById('search-status-text');
+        const noResultsQueryEl = document.getElementById('no-results-query');
+
+        searchLoading.style.display = 'none';
+        searchStatus.style.display = 'flex';
+        statusTextEl.textContent = `${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"`;
+
+        if (results.length > 0) {
+          resultsEl.innerHTML = results.map(f => createFastenerCard(f, query)).join('');
+          resultsEl.style.display = 'grid';
+          noResultsEl.style.display = 'none';
+        } else {
+          noResultsQueryEl.textContent = query;
+          resultsEl.style.display = 'none';
+          noResultsEl.style.display = 'block';
+        }
+      }, 100);
+    }
+
+    // Perform search on page load
+    document.addEventListener('DOMContentLoaded', performSearch);
+
+    // Handle form submission
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.querySelector('form');
+      if (form) {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const formData = new FormData(form);
+          const query = formData.get('q');
+          const url = new URL(window.location);
+          url.searchParams.set('q', query);
+          window.history.pushState({}, '', url);
+          performSearch();
+        });
+      }
+    });
+  </script>
+</BaseLayout>

@@ -1,6 +1,14 @@
 // Core fastener types for fasteners.fyi
 
-export type FastenerCategory = 'screw' | 'bolt' | 'anchor' | 'nut';
+export type FastenerCategory = 'screw' | 'bolt' | 'anchor' | 'nut' | 'washer';
+
+export type WasherType = 'flat' | 'lock' | 'spring' | 'countersunk' | 'insulating' | 'sealing';
+
+export interface Source {
+  name: string;
+  url?: string;
+  accessDate?: string;
+}
 
 export type DriveType =
   | 'phillips'
@@ -71,6 +79,9 @@ export interface Fastener {
   // Metadata
   aliases?: string[];
   relatedFasteners?: string[]; // slugs of related items
+
+  // Source attribution
+  sources?: Source[];
 }
 
 // Category-specific extensions
@@ -98,4 +109,12 @@ export interface Anchor extends Fastener {
 export interface Nut extends Fastener {
   category: 'nut';
   lockingMechanism?: 'nylon-insert' | 'prevailing-torque' | 'serrated' | 'none';
+}
+
+export interface Washer extends Fastener {
+  category: 'washer';
+  washerType: WasherType;
+  innerDiameterRange?: DimensionRange;
+  outerDiameterRange?: DimensionRange;
+  thicknessRange?: DimensionRange;
 }
