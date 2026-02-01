@@ -1,0 +1,122 @@
+[
+  {
+    "id": "hex-nut",
+    "name": "Hex Nut",
+    "slug": "hex-nut",
+    "category": "nut",
+    "description": "Standard six-sided nut. Most common nut type for general-purpose fastening with hex bolts and machine screws.",
+    "headStyle": "hex",
+    "driveType": "hex",
+    "threadType": "machine",
+    "lockingMechanism": "none",
+    "materials": ["steel", "stainless-steel", "zinc-plated", "brass", "nylon"],
+    "diameterRange": { "min": 0.06, "max": 4, "unit": "in" },
+    "measurementSystem": ["imperial", "metric"],
+    "standards": ["ASME B18.2.2", "ISO 4032", "DIN 934"],
+    "applications": [
+      "General fastening",
+      "Machinery assembly",
+      "Structural connections",
+      "Automotive"
+    ],
+    "notRecommendedFor": ["High-vibration without additional locking"],
+    "aliases": ["standard nut", "finished hex nut", "full nut"],
+    "relatedFasteners": ["lock-nut", "jam-nut"]
+  },
+  {
+    "id": "lock-nut",
+    "name": "Lock Nut (Nylon Insert)",
+    "slug": "lock-nut",
+    "category": "nut",
+    "description": "Hex nut with nylon ring insert that grips bolt threads to resist loosening. Single-use; nylon deforms after first installation.",
+    "headStyle": "hex",
+    "driveType": "hex",
+    "threadType": "machine",
+    "lockingMechanism": "nylon-insert",
+    "materials": ["steel", "stainless-steel", "zinc-plated"],
+    "diameterRange": { "min": 0.112, "max": 1.5, "unit": "in" },
+    "measurementSystem": ["imperial", "metric"],
+    "standards": ["IFI-100/107", "DIN 985"],
+    "applications": [
+      "Vibration-prone assemblies",
+      "Automotive suspension",
+      "Machinery",
+      "Electronics enclosures"
+    ],
+    "notRecommendedFor": ["High temperature (over 250°F)", "Reuse applications", "Food processing (nylon contamination)"],
+    "aliases": ["nyloc nut", "nylock", "stiff nut", "prevailing torque nut"],
+    "relatedFasteners": ["hex-nut", "all-metal-lock-nut"]
+  },
+  {
+    "id": "wing-nut",
+    "name": "Wing Nut",
+    "slug": "wing-nut",
+    "category": "nut",
+    "description": "Nut with two protruding wings for hand tightening without tools. Used where frequent adjustment or removal is needed.",
+    "headStyle": "none",
+    "driveType": "none",
+    "threadType": "machine",
+    "lockingMechanism": "none",
+    "materials": ["steel", "stainless-steel", "zinc-plated", "brass"],
+    "diameterRange": { "min": 0.138, "max": 0.75, "unit": "in" },
+    "measurementSystem": ["imperial", "metric"],
+    "standards": ["ASME B18.17", "DIN 315"],
+    "applications": [
+      "Drum hardware",
+      "Battery terminals",
+      "Air filter housings",
+      "Quick-change fixtures"
+    ],
+    "notRecommendedFor": ["High-torque applications", "Vibration environments", "Permanent installations"],
+    "aliases": ["butterfly nut", "hand nut", "thumb nut"],
+    "relatedFasteners": ["hex-nut", "knurled-nut"]
+  },
+  {
+    "id": "cap-nut",
+    "name": "Cap Nut",
+    "slug": "cap-nut",
+    "category": "nut",
+    "description": "Hex nut with domed cap covering the bolt end. Provides finished appearance and protects threads from damage and corrosion.",
+    "headStyle": "hex",
+    "driveType": "hex",
+    "threadType": "machine",
+    "lockingMechanism": "none",
+    "materials": ["steel", "stainless-steel", "brass", "chrome-plated"],
+    "diameterRange": { "min": 0.138, "max": 1, "unit": "in" },
+    "measurementSystem": ["imperial", "metric"],
+    "standards": ["ASME B18.6.3", "DIN 1587"],
+    "applications": [
+      "Furniture and fixtures",
+      "Handrails",
+      "Decorative applications",
+      "Safety covers for exposed threads"
+    ],
+    "notRecommendedFor": ["Applications requiring thread access", "High-torque (decorative cap may strip)"],
+    "aliases": ["acorn nut", "dome nut", "blind nut", "crown nut"],
+    "relatedFasteners": ["hex-nut", "flange-nut"]
+  },
+  {
+    "id": "flange-nut",
+    "name": "Flange Nut",
+    "slug": "flange-nut",
+    "category": "nut",
+    "description": "Hex nut with integrated washer flange. Serrated flange version provides locking action. Distributes load without separate washer.",
+    "headStyle": "hex",
+    "driveType": "hex",
+    "threadType": "machine",
+    "lockingMechanism": "serrated",
+    "materials": ["steel", "stainless-steel", "zinc-plated"],
+    "diameterRange": { "min": 0.164, "max": 1, "unit": "in" },
+    "measurementSystem": ["imperial", "metric"],
+    "standards": ["IFI-145", "DIN 6923"],
+    "applications": [
+      "Automotive assembly",
+      "Appliances",
+      "Sheet metal",
+      "Vibration-resistant assemblies"
+    ],
+    "notRecommendedFor": ["Soft materials (serrations damage surface)", "Disassembly-required applications"],
+    "aliases": ["serrated flange nut", "whiz nut", "spin lock nut"],
+    "relatedFasteners": ["hex-nut", "lock-nut"]
+  }
+]

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { screws } from '../utils/data';
 ---
 
 <BaseLayout title="Screws" description="Comprehensive screw specifications - wood screws, machine screws, self-tapping, and specialty screws.">
@@ -9,8 +10,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       Wood screws, machine screws, self-tapping, and specialty screws.
     </p>
 
-    <div class="rounded-lg border border-zinc-800 bg-zinc-900/50 p-8 text-center">
-      <p class="text-zinc-400">Content coming soon. Check back for detailed screw specifications.</p>
+    <div class="grid gap-4">
+      {screws.map((screw) => (
+        <a href={`/screws/${screw.slug}`} class="block rounded-lg border border-zinc-800 bg-zinc-900/50 p-6 hover:border-blue-500/50 hover:bg-zinc-900 transition-colors">
+          <h2 class="text-xl font-semibold mb-2">{screw.name}</h2>
+          <p class="text-zinc-400 mb-4">{screw.description}</p>
+          <div class="flex flex-wrap gap-2">
+            {screw.materials.slice(0, 3).map((material) => (
+              <span class="px-2 py-1 text-xs rounded bg-zinc-800 text-zinc-300">{material}</span>
+            ))}
+            {screw.driveType && (
+              <span class="px-2 py-1 text-xs rounded bg-blue-900/50 text-blue-300">{screw.driveType} drive</span>
+            )}
+          </div>
+        </a>
+      ))}
     </div>
   </div>
 </BaseLayout>

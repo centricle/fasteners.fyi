@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { bolts } from '../../utils/data';
+import type { Bolt } from '../../types/fastener';
+
+export function getStaticPaths() {
+  return bolts.map((bolt) => ({
+    params: { slug: bolt.slug },
+    props: { bolt }
+  }));
+}
+
+interface Props {
+  bolt: Bolt;
+}
+
+const { bolt } = Astro.props;
+
+const title = `${bolt.name} Specifications`;
+const description = bolt.description;
+
+// Format dimension range for display
+function formatRange(range: { min: number; max: number; unit: string } | undefined): string {
+  if (!range) return 'N/A';
+  return `${range.min}" - ${range.max}"`;
+}
+
+// Format drive type for display
+function formatDriveType(drive: string | undefined): string {
+  if (!drive || drive === 'none') return 'None';
+  return drive.charAt(0).toUpperCase() + drive.slice(1).replace(/-/g, ' ');
+}
+
+// Format head style for display
+function formatHeadStyle(head: string | undefined): string {
+  if (!head || head === 'none') return 'None';
+  return head.charAt(0).toUpperCase() + head.slice(1).replace(/-/g, ' ');
+}
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Breadcrumb -->
+    <nav class="mb-8 flex text-sm" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-2">
+        <li>
+          <a href="/" class="text-zinc-400 hover:text-zinc-100">Home</a>
+        </li>
+        <li class="text-zinc-600">/</li>
+        <li>
+          <a href="/bolts" class="text-zinc-400 hover:text-zinc-100">Bolts</a>
+        </li>
+        <li class="text-zinc-600">/</li>
+        <li class="text-zinc-300">{bolt.name}</li>
+      </ol>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Main Content -->
+      <div class="lg:col-span-2 space-y-8">
+        <div>
+          <h1 class="text-4xl font-bold mb-4">{bolt.name}</h1>
+          {bolt.aliases && bolt.aliases.length > 0 && (
+            <p class="text-zinc-400 mb-4">Also known as: {bolt.aliases.join(', ')}</p>
+          )}
+          <p class="text-lg text-zinc-300">{bolt.description}</p>
+        </div>
+
+        <!-- Quick Specs -->
+        <div class="border border-zinc-800 rounded-lg p-6 bg-zinc-900/50">
+          <h2 class="text-xl font-semibold mb-4">Quick Specifications</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="text-center">
+              <p class="text-sm text-zinc-500 mb-1">Head Style</p>
+              <p class="text-lg font-semibold">{formatHeadStyle(bolt.headStyle)}</p>
+            </div>
+            <div class="text-center">
+              <p class="text-sm text-zinc-500 mb-1">Drive Type</p>
+              <p class="text-lg font-semibold">{formatDriveType(bolt.driveType)}</p>
+            </div>
+            <div class="text-center">
+              <p class="text-sm text-zinc-500 mb-1">Thread Type</p>
+              <p class="text-lg font-semibold">{formatDriveType(bolt.threadType)}</p>
+            </div>
+            <div class="text-center">
+              <p class="text-sm text-zinc-500 mb-1">Nut Required</p>
+              <p class="text-lg font-semibold">{bolt.nutRequired ? 'Yes' : 'No'}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Assembly Requirements -->
+        <div class="border border-zinc-800 rounded-lg p-6 bg-zinc-900/50">
+          <h2 class="text-xl font-semibold mb-4">Assembly Requirements</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex items-center gap-3">
+              <span class={bolt.nutRequired ? 'text-yellow-500' : 'text-green-500'}>
+                {bolt.nutRequired ? '!' : '-'}
+              </span>
+              <span class="text-zinc-300">
+                {bolt.nutRequired ? 'Requires nut for installation' : 'Self-fastening (no nut required)'}
+              </span>
+            </div>
+            {bolt.washerRecommended !== undefined && (
+              <div class="flex items-center gap-3">
+                <span class={bolt.washerRecommended ? 'text-yellow-500' : 'text-zinc-500'}>
+                  {bolt.washerRecommended ? '!' : '-'}
+                </span>
+                <span class="text-zinc-300">
+                  {bolt.washerRecommended ? 'Washer recommended' : 'Washer optional'}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <!-- Dimensions -->
+        <div class="border border-zinc-800 rounded-lg p-6 bg-zinc-900/50">
+          <h2 class="text-xl font-semibold mb-4">Dimensions</h2>
+          <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {bolt.diameterRange && (
+              <div>
+                <dt class="text-sm text-zinc-500">Diameter Range</dt>
+                <dd class="text-lg">{formatRange(bolt.diameterRange)}</dd>
+              </div>
+            )}
+            {bolt.lengthRange && (
+              <div>
+                <dt class="text-sm text-zinc-500">Length Range</dt>
+                <dd class="text-lg">{formatRange(bolt.lengthRange)}</dd>
+              </div>
+            )}
+            <div>
+              <dt class="text-sm text-zinc-500">Measurement System</dt>
+              <dd class="text-lg">{bolt.measurementSystem.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ')}</dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- Materials -->
+        <div class="border border-zinc-800 rounded-lg p-6 bg-zinc-900/50">
+          <h2 class="text-xl font-semibold mb-4">Available Materials</h2>
+          <div class="flex flex-wrap gap-2">
+            {bolt.materials.map((material) => (
+              <span class="px-3 py-1 rounded-full bg-zinc-800 text-zinc-300 text-sm">
+                {material.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <!-- Standards -->
+        {bolt.standards && bolt.standards.length > 0 && (
+          <div class="border border-zinc-800 rounded-lg p-6 bg-zinc-900/50">
+            <h2 class="text-xl font-semibold mb-4">Standards</h2>
+            <div class="flex flex-wrap gap-2">
+              {bolt.standards.map((standard) => (
+                <span class="px-3 py-1 rounded border border-zinc-700 text-zinc-300 text-sm font-mono">
+                  {standard}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <!-- Sidebar -->
+      <div class="space-y-6">
+        <!-- Applications -->
+        <div class="border border-zinc-800 rounded-lg p-6 bg-blue-950/30">
+          <h3 class="text-lg font-semibold mb-4">Common Applications</h3>
+          <ul class="space-y-2 text-zinc-300">
+            {bolt.applications.map((app) => (
+              <li class="flex items-start gap-2">
+                <span class="text-green-500 mt-1">+</span>
+                <span>{app}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Not Recommended -->
+        {bolt.notRecommendedFor && bolt.notRecommendedFor.length > 0 && (
+          <div class="border border-zinc-800 rounded-lg p-6 bg-red-950/20">
+            <h3 class="text-lg font-semibold mb-4">Not Recommended For</h3>
+            <ul class="space-y-2 text-zinc-300">
+              {bolt.notRecommendedFor.map((item) => (
+                <li class="flex items-start gap-2">
+                  <span class="text-red-500 mt-1">-</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <!-- Related Fasteners -->
+        {bolt.relatedFasteners && bolt.relatedFasteners.length > 0 && (
+          <div class="border border-zinc-800 rounded-lg p-6 bg-zinc-900/50">
+            <h3 class="text-lg font-semibold mb-4">Related Fasteners</h3>
+            <div class="flex flex-wrap gap-2">
+              {bolt.relatedFasteners.map((slug) => (
+                <a href={`/bolts/${slug}`} class="px-3 py-1 rounded bg-zinc-800 text-primary-400 hover:bg-zinc-700 text-sm transition-colors">
+                  {slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</BaseLayout>

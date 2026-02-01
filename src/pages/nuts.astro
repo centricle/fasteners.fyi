@@ -1,16 +1,30 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { nuts } from '../utils/data';
 ---
 
-<BaseLayout title="Nuts" description="Comprehensive nut specifications - hex nuts, lock nuts, wing nuts, and specialty nuts.">
+<BaseLayout title="Nuts" description="Nut specifications - hex nuts, lock nuts, wing nuts, and specialty nuts.">
   <div class="max-w-6xl mx-auto px-4 py-16">
     <h1 class="text-4xl font-bold mb-4">Nuts</h1>
     <p class="text-xl text-zinc-400 mb-8">
-      Hex nuts, lock nuts, wing nuts, and specialty nuts.
+      Hex nuts, lock nuts, wing nuts, and specialty fasteners.
     </p>
 
-    <div class="rounded-lg border border-zinc-800 bg-zinc-900/50 p-8 text-center">
-      <p class="text-zinc-400">Content coming soon. Check back for detailed nut specifications.</p>
+    <div class="grid gap-4">
+      {nuts.map((nut) => (
+        <a href={`/nuts/${nut.slug}`} class="block rounded-lg border border-zinc-800 bg-zinc-900/50 p-6 hover:border-blue-500/50 hover:bg-zinc-900 transition-colors">
+          <h2 class="text-xl font-semibold mb-2">{nut.name}</h2>
+          <p class="text-zinc-400 mb-4">{nut.description}</p>
+          <div class="flex flex-wrap gap-2">
+            {nut.materials.slice(0, 3).map((material) => (
+              <span class="px-2 py-1 text-xs rounded bg-zinc-800 text-zinc-300">{material}</span>
+            ))}
+            {nut.lockingMechanism && nut.lockingMechanism !== 'none' && (
+              <span class="px-2 py-1 text-xs rounded bg-purple-900/50 text-purple-300">{nut.lockingMechanism}</span>
+            )}
+          </div>
+        </a>
+      ))}
     </div>
   </div>
 </BaseLayout>

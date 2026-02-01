@@ -1,16 +1,30 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { bolts } from '../utils/data';
 ---
 
-<BaseLayout title="Bolts" description="Comprehensive bolt specifications - hex bolts, carriage bolts, eye bolts, and structural fasteners.">
+<BaseLayout title="Bolts" description="Bolt specifications - hex bolts, carriage bolts, lag bolts, and structural fasteners.">
   <div class="max-w-6xl mx-auto px-4 py-16">
     <h1 class="text-4xl font-bold mb-4">Bolts</h1>
     <p class="text-xl text-zinc-400 mb-8">
-      Hex bolts, carriage bolts, eye bolts, and structural fasteners.
+      Hex bolts, carriage bolts, lag bolts, and structural fasteners.
     </p>
 
-    <div class="rounded-lg border border-zinc-800 bg-zinc-900/50 p-8 text-center">
-      <p class="text-zinc-400">Content coming soon. Check back for detailed bolt specifications.</p>
+    <div class="grid gap-4">
+      {bolts.map((bolt) => (
+        <a href={`/bolts/${bolt.slug}`} class="block rounded-lg border border-zinc-800 bg-zinc-900/50 p-6 hover:border-blue-500/50 hover:bg-zinc-900 transition-colors">
+          <h2 class="text-xl font-semibold mb-2">{bolt.name}</h2>
+          <p class="text-zinc-400 mb-4">{bolt.description}</p>
+          <div class="flex flex-wrap gap-2">
+            {bolt.materials.slice(0, 3).map((material) => (
+              <span class="px-2 py-1 text-xs rounded bg-zinc-800 text-zinc-300">{material}</span>
+            ))}
+            {bolt.nutRequired && (
+              <span class="px-2 py-1 text-xs rounded bg-amber-900/50 text-amber-300">nut required</span>
+            )}
+          </div>
+        </a>
+      ))}
     </div>
   </div>
 </BaseLayout>

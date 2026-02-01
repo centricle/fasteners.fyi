@@ -1,0 +1,113 @@
+[
+  {
+    "id": "plastic-wall-anchor",
+    "name": "Plastic Wall Anchor",
+    "slug": "plastic-wall-anchor",
+    "category": "anchor",
+    "description": "Ribbed plastic sleeve that expands when screw is driven in. Most basic hollow-wall anchor for light-duty applications.",
+    "baseMaterial": ["drywall", "hollow-wall"],
+    "materials": ["nylon"],
+    "diameterRange": { "min": 0.188, "max": 0.375, "unit": "in" },
+    "lengthRange": { "min": 0.875, "max": 1.5, "unit": "in" },
+    "measurementSystem": ["imperial"],
+    "loadCapacity": { "tension": 20, "unit": "lb" },
+    "applications": [
+      "Picture hanging",
+      "Light shelving",
+      "Switch plates",
+      "Smoke detectors"
+    ],
+    "notRecommendedFor": ["Heavy loads", "Ceiling installations", "Vibrating loads"],
+    "aliases": ["wall plug", "plastic expansion anchor", "rawl plug"],
+    "relatedFasteners": ["toggle-bolt", "self-drilling-anchor"]
+  },
+  {
+    "id": "toggle-bolt",
+    "name": "Toggle Bolt",
+    "slug": "toggle-bolt",
+    "category": "anchor",
+    "description": "Spring-loaded wings that expand behind hollow wall. Provides highest holding power in drywall but requires large hole and is not reusable.",
+    "baseMaterial": ["drywall", "hollow-wall"],
+    "materials": ["steel", "zinc-plated"],
+    "diameterRange": { "min": 0.125, "max": 0.5, "unit": "in" },
+    "lengthRange": { "min": 2, "max": 6, "unit": "in" },
+    "measurementSystem": ["imperial"],
+    "loadCapacity": { "tension": 100, "shear": 150, "unit": "lb" },
+    "applications": [
+      "Heavy mirrors",
+      "TV mounts",
+      "Grab bars",
+      "Ceiling hooks"
+    ],
+    "notRecommendedFor": ["Thin materials (wings need clearance)", "Reusable applications"],
+    "aliases": ["butterfly anchor", "spring toggle", "molly bolt"],
+    "relatedFasteners": ["plastic-wall-anchor", "self-drilling-anchor"]
+  },
+  {
+    "id": "wedge-anchor",
+    "name": "Wedge Anchor",
+    "slug": "wedge-anchor",
+    "category": "anchor",
+    "description": "Permanent concrete anchor that expands at base when nut is tightened. Highest holding power for solid concrete applications.",
+    "baseMaterial": ["concrete"],
+    "materials": ["steel", "stainless-steel", "galvanized"],
+    "diameterRange": { "min": 0.25, "max": 1.25, "unit": "in" },
+    "lengthRange": { "min": 1.75, "max": 12, "unit": "in" },
+    "measurementSystem": ["imperial", "metric"],
+    "loadCapacity": { "tension": 1500, "shear": 3000, "unit": "lb" },
+    "standards": ["ICC-ES ESR-1385"],
+    "applications": [
+      "Structural steel attachment",
+      "Machinery mounting",
+      "Handrail posts",
+      "Equipment anchoring"
+    ],
+    "notRecommendedFor": ["Brick (use sleeve anchor)", "Close to edges", "Cracked concrete"],
+    "aliases": ["concrete wedge", "expansion anchor", "stud anchor"],
+    "relatedFasteners": ["sleeve-anchor", "drop-in-anchor"]
+  },
+  {
+    "id": "sleeve-anchor",
+    "name": "Sleeve Anchor",
+    "slug": "sleeve-anchor",
+    "category": "anchor",
+    "description": "Versatile anchor with expanding sleeve that works in solid and hollow masonry. More forgiving than wedge anchors for imprecise holes.",
+    "baseMaterial": ["concrete", "masonry"],
+    "materials": ["steel", "stainless-steel", "zinc-plated"],
+    "diameterRange": { "min": 0.25, "max": 0.75, "unit": "in" },
+    "lengthRange": { "min": 1.25, "max": 6, "unit": "in" },
+    "measurementSystem": ["imperial", "metric"],
+    "loadCapacity": { "tension": 800, "shear": 1500, "unit": "lb" },
+    "applications": [
+      "Brick and block walls",
+      "Handrails on masonry",
+      "Electrical boxes",
+      "Sign mounting"
+    ],
+    "notRecommendedFor": ["Maximum load applications (use wedge)", "Very hard concrete"],
+    "aliases": ["masonry anchor", "expansion sleeve", "dynabolt"],
+    "relatedFasteners": ["wedge-anchor", "drop-in-anchor"]
+  },
+  {
+    "id": "self-drilling-anchor",
+    "name": "Self-Drilling Anchor",
+    "slug": "self-drilling-anchor",
+    "category": "anchor",
+    "description": "Drywall anchor that drills its own hole and threads into wallboard. No pre-drilling required. Zinc body with sharp point.",
+    "baseMaterial": ["drywall"],
+    "materials": ["zinc-plated", "nylon"],
+    "diameterRange": { "min": 0.25, "max": 0.375, "unit": "in" },
+    "lengthRange": { "min": 1, "max": 1.5, "unit": "in" },
+    "measurementSystem": ["imperial"],
+    "loadCapacity": { "tension": 50, "unit": "lb" },
+    "applications": [
+      "Medium-weight shelving",
+      "Towel bars",
+      "Coat hooks",
+      "Light fixtures"
+    ],
+    "notRecommendedFor": ["Ceilings", "Heavy loads", "Plaster walls"],
+    "aliases": ["E-Z anchor", "zip-it", "self-tapping anchor", "drywall screw anchor"],
+    "relatedFasteners": ["plastic-wall-anchor", "toggle-bolt"]
+  }
+]

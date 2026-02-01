@@ -1,0 +1,206 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { nuts } from '../../utils/data';
+import type { Nut } from '../../types/fastener';
+
+export function getStaticPaths() {
+  return nuts.map((nut) => ({
+    params: { slug: nut.slug },
+    props: { nut }
+  }));
+}
+
+interface Props {
+  nut: Nut;
+}
+
+const { nut } = Astro.props;
+
+const title = `${nut.name} Specifications`;
+const description = nut.description;
+
+// Format dimension range for display
+function formatRange(range: { min: number; max: number; unit: string } | undefined): string {
+  if (!range) return 'N/A';
+  return `${range.min}" - ${range.max}"`;
+}
+
+// Format drive type for display
+function formatDriveType(drive: string | undefined): string {
+  if (!drive || drive === 'none') return 'None';
+  return drive.charAt(0).toUpperCase() + drive.slice(1).replace(/-/g, ' ');
+}
+
+// Format head style for display
+function formatHeadStyle(head: string | undefined): string {
+  if (!head || head === 'none') return 'None';
+  return head.charAt(0).toUpperCase() + head.slice(1).replace(/-/g, ' ');
+}
+
+// Format locking mechanism for display
+function formatLockingMechanism(lock: string | undefined): string {
+  if (!lock || lock === 'none') return 'None';
+  return lock.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+}
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Breadcrumb -->
+    <nav class="mb-8 flex text-sm" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-2">
+        <li>
+          <a href="/" class="text-zinc-400 hover:text-zinc-100">Home</a>
+        </li>
+        <li class="text-zinc-600">/</li>
+        <li>
+          <a href="/nuts" class="text-zinc-400 hover:text-zinc-100">Nuts</a>
+        </li>
+        <li class="text-zinc-600">/</li>
+        <li class="text-zinc-300">{nut.name}</li>
+      </ol>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Main Content -->
+      <div class="lg:col-span-2 space-y-8">
+        <div>
+          <h1 class="text-4xl font-bold mb-4">{nut.name}</h1>
+          {nut.aliases && nut.aliases.length > 0 && (
+            <p class="text-zinc-400 mb-4">Also known as: {nut.aliases.join(', ')}</p>
+          )}
+          <p class="text-lg text-zinc-300">{nut.description}</p>
+        </div>
+
+        <!-- Quick Specs -->
+        <div class="border border-zinc-800 rounded-lg p-6 bg-zinc-900/50">
+          <h2 class="text-xl font-semibold mb-4">Quick Specifications</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="text-center">
+              <p class="text-sm text-zinc-500 mb-1">Shape</p>
+              <p class="text-lg font-semibold">{formatHeadStyle(nut.headStyle)}</p>
+            </div>
+            <div class="text-center">
+              <p class="text-sm text-zinc-500 mb-1">Drive Type</p>
+              <p class="text-lg font-semibold">{formatDriveType(nut.driveType)}</p>
+            </div>
+            <div class="text-center">
+              <p class="text-sm text-zinc-500 mb-1">Thread Type</p>
+              <p class="text-lg font-semibold">{formatDriveType(nut.threadType)}</p>
+            </div>
+            <div class="text-center">
+              <p class="text-sm text-zinc-500 mb-1">Locking</p>
+              <p class="text-lg font-semibold">{formatLockingMechanism(nut.lockingMechanism)}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Locking Mechanism Details -->
+        {nut.lockingMechanism && nut.lockingMechanism !== 'none' && (
+          <div class="border border-zinc-800 rounded-lg p-6 bg-yellow-950/20">
+            <h2 class="text-xl font-semibold mb-4">Locking Mechanism</h2>
+            <div class="flex items-center gap-3">
+              <span class="text-yellow-500 text-2xl">!</span>
+              <div>
+                <p class="text-lg font-semibold text-yellow-300">{formatLockingMechanism(nut.lockingMechanism)}</p>
+                <p class="text-zinc-400 text-sm mt-1">
+                  {nut.lockingMechanism === 'nylon-insert' && 'Nylon ring deforms around bolt threads to resist loosening. Single-use recommended.'}
+                  {nut.lockingMechanism === 'serrated' && 'Serrated flange bites into mating surface to resist rotation.'}
+                  {nut.lockingMechanism === 'prevailing-torque' && 'All-metal design maintains locking torque through thread distortion.'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <!-- Dimensions -->
+        <div class="border border-zinc-800 rounded-lg p-6 bg-zinc-900/50">
+          <h2 class="text-xl font-semibold mb-4">Dimensions</h2>
+          <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {nut.diameterRange && (
+              <div>
+                <dt class="text-sm text-zinc-500">Thread Size Range</dt>
+                <dd class="text-lg">{formatRange(nut.diameterRange)}</dd>
+              </div>
+            )}
+            <div>
+              <dt class="text-sm text-zinc-500">Measurement System</dt>
+              <dd class="text-lg">{nut.measurementSystem.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ')}</dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- Materials -->
+        <div class="border border-zinc-800 rounded-lg p-6 bg-zinc-900/50">
+          <h2 class="text-xl font-semibold mb-4">Available Materials</h2>
+          <div class="flex flex-wrap gap-2">
+            {nut.materials.map((material) => (
+              <span class="px-3 py-1 rounded-full bg-zinc-800 text-zinc-300 text-sm">
+                {material.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <!-- Standards -->
+        {nut.standards && nut.standards.length > 0 && (
+          <div class="border border-zinc-800 rounded-lg p-6 bg-zinc-900/50">
+            <h2 class="text-xl font-semibold mb-4">Standards</h2>
+            <div class="flex flex-wrap gap-2">
+              {nut.standards.map((standard) => (
+                <span class="px-3 py-1 rounded border border-zinc-700 text-zinc-300 text-sm font-mono">
+                  {standard}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <!-- Sidebar -->
+      <div class="space-y-6">
+        <!-- Applications -->
+        <div class="border border-zinc-800 rounded-lg p-6 bg-blue-950/30">
+          <h3 class="text-lg font-semibold mb-4">Common Applications</h3>
+          <ul class="space-y-2 text-zinc-300">
+            {nut.applications.map((app) => (
+              <li class="flex items-start gap-2">
+                <span class="text-green-500 mt-1">+</span>
+                <span>{app}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Not Recommended -->
+        {nut.notRecommendedFor && nut.notRecommendedFor.length > 0 && (
+          <div class="border border-zinc-800 rounded-lg p-6 bg-red-950/20">
+            <h3 class="text-lg font-semibold mb-4">Not Recommended For</h3>
+            <ul class="space-y-2 text-zinc-300">
+              {nut.notRecommendedFor.map((item) => (
+                <li class="flex items-start gap-2">
+                  <span class="text-red-500 mt-1">-</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <!-- Related Fasteners -->
+        {nut.relatedFasteners && nut.relatedFasteners.length > 0 && (
+          <div class="border border-zinc-800 rounded-lg p-6 bg-zinc-900/50">
+            <h3 class="text-lg font-semibold mb-4">Related Fasteners</h3>
+            <div class="flex flex-wrap gap-2">
+              {nut.relatedFasteners.map((slug) => (
+                <a href={`/nuts/${slug}`} class="px-3 py-1 rounded bg-zinc-800 text-primary-400 hover:bg-zinc-700 text-sm transition-colors">
+                  {slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</BaseLayout>

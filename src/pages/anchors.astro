@@ -1,16 +1,30 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { anchors } from '../utils/data';
 ---
 
-<BaseLayout title="Anchors" description="Comprehensive anchor specifications - wall anchors, concrete anchors, toggle bolts, and expansion anchors.">
+<BaseLayout title="Anchors" description="Wall and concrete anchor specifications - toggle bolts, wedge anchors, and drywall anchors.">
   <div class="max-w-6xl mx-auto px-4 py-16">
     <h1 class="text-4xl font-bold mb-4">Anchors</h1>
     <p class="text-xl text-zinc-400 mb-8">
       Wall anchors, concrete anchors, toggle bolts, and expansion anchors.
     </p>
 
-    <div class="rounded-lg border border-zinc-800 bg-zinc-900/50 p-8 text-center">
-      <p class="text-zinc-400">Content coming soon. Check back for detailed anchor specifications.</p>
+    <div class="grid gap-4">
+      {anchors.map((anchor) => (
+        <a href={`/anchors/${anchor.slug}`} class="block rounded-lg border border-zinc-800 bg-zinc-900/50 p-6 hover:border-blue-500/50 hover:bg-zinc-900 transition-colors">
+          <h2 class="text-xl font-semibold mb-2">{anchor.name}</h2>
+          <p class="text-zinc-400 mb-4">{anchor.description}</p>
+          <div class="flex flex-wrap gap-2">
+            {anchor.baseMaterial.map((material) => (
+              <span class="px-2 py-1 text-xs rounded bg-zinc-800 text-zinc-300">{material}</span>
+            ))}
+            {anchor.loadCapacity?.tension && (
+              <span class="px-2 py-1 text-xs rounded bg-green-900/50 text-green-300">{anchor.loadCapacity.tension} {anchor.loadCapacity.unit} tension</span>
+            )}
+          </div>
+        </a>
+      ))}
     </div>
   </div>
 </BaseLayout>
